@@ -118,7 +118,12 @@ public class Day {
         {
             int sR = Math.round(horasDiarias * 3600);
             segundosRestantes = sR - segundosTrabajados;
-            descanso += (new Date().getTime() * 1000) - (fichajes.get(0).getMomento().getTime() * 1000);
+            //Calendar cD = Calendar.getInstance();
+            Date ahora = new Date();
+            Date hF = fichajes.get(0).getMomento();
+            long difDate = (ahora.getTime() - hF.getTime())/1000;
+            //cD.add(SECOND,1);
+            descanso += difDate;
             horaSalida = new Date((segundosRestantes * 1000) - 3600000);
 
 
@@ -131,6 +136,8 @@ public class Day {
             long difDate = (ahora.getTime() - hF.getTime())/1000;
             segundosTrabajados += difDate;
             segundosRestantes = Math.round(horasDiarias * 3600) - segundosTrabajados;
+
+
             Calendar chs = Calendar.getInstance();
             chs.add(SECOND, (int) segundosRestantes);
             horaSalida = chs.getTime();
@@ -215,10 +222,9 @@ public class Day {
             calculateTimes();
             semana.calculateTimes();
             long tiempoRestante = semana.getSegundosObjetivo() - semana.getSegundosTrabajados();
-            long salidaTeorica = horaSalida.getTime() - tiempoRestante;
-            Date sT = new Date(salidaTeorica);
             c = Calendar.getInstance();
             c.add(SECOND, (int) tiempoRestante);
+            
             return String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":"+String.format("%02d", c.get(Calendar.MINUTE)) + ":"+String.format("%02d", c.get(SECOND)) + "*";
         }
         return "";
