@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.evrencoskun.tableview.TableView;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.locactio.geotime.WS.ClockingResponseHandler;
 import com.locactio.geotime.WS.DataREST;
@@ -27,7 +24,6 @@ import com.locactio.geotime.entities.Day;
 import com.locactio.geotime.entities.Week;
 import com.locactio.geotime.utils.TableViewAdapter;
 
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,8 +32,10 @@ import java.util.List;
 import segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl;
 import segmented_control.widget.custom.android.com.segmentedcontrol.item_row_column.SegmentViewHolder;
 import segmented_control.widget.custom.android.com.segmentedcontrol.listeners.OnSegmentSelectRequestListener;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class PrincipalActivity extends AppCompatActivity {
+public class PrincipalActivity extends Template {
 
     String token;
     String nombreCompleto;
@@ -66,6 +64,8 @@ public class PrincipalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
+
+
         coordinatorLayout = findViewById(R.id.coordinator);
         segmentedControl = findViewById(R.id.segmented);
         table = findViewById(R.id.table);
@@ -153,10 +153,7 @@ public class PrincipalActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
     }
-
 
 
     private void request_info(Date d1, Date d2)
@@ -197,8 +194,6 @@ public class PrincipalActivity extends AppCompatActivity {
             @Override
             public void onResponse(List<Clocking> clockingList) {
                 horasTotales.addAll(clockingList);
-                Clocking ck = new Clocking("2019-09-06 07:16:11",0);
-                horasTotales.add(0,ck);
                 if (horas != null)
                     horas.clear();
                 else
@@ -286,7 +281,10 @@ public class PrincipalActivity extends AppCompatActivity {
             c.setTime(trabajado);
             d1.setText(String.format("%02d",c.get(Calendar.HOUR_OF_DAY)-1) + ":" + String.format("%02d",c.get(Calendar.MINUTE)) + ":" + String.format("%02d",c.get(Calendar.SECOND)));
             c.setTime(diaSeleccionado.getHoraSalida());
-            d2.setText(String.format("%02d",c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",c.get(Calendar.MINUTE)) + ":" + String.format("%02d",c.get(Calendar.SECOND)) + diaSeleccionado.friday(semanas));
+            d2.setText(String.format("%02d",c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",c.get(Calendar.MINUTE)) + ":" + String.format("%02d",c.get(Calendar.SECOND)));
+            String recalculado = diaSeleccionado.friday(semanas);
+            d2.setText(recalculado.equalsIgnoreCase("")?d2.getText():recalculado);
+
             Date descansando = new Date(diaSeleccionado.getDescanso() * 1000);
             c.setTime(descansando);
             d3.setText(String.format("%02d",c.get(Calendar.HOUR_OF_DAY)-1) + ":" + String.format("%02d",c.get(Calendar.MINUTE)) + ":" + String.format("%02d",c.get(Calendar.SECOND)));
@@ -358,19 +356,19 @@ public class PrincipalActivity extends AppCompatActivity {
         switch (c.get(Calendar.DAY_OF_WEEK))
         {
             case Calendar.MONDAY:
-                return "Lunes";
+                return getString(R.string.lunes);
             case Calendar.TUESDAY:
-                return "Martes";
+                return getString(R.string.martes);
             case Calendar.WEDNESDAY:
-                return "Miercoles";
+                return getString(R.string.miercoles);
             case Calendar.THURSDAY:
-                return "Jueves";
+                return getString(R.string.jueves);
             case Calendar.FRIDAY:
-                return "Viernes";
+                return getString(R.string.viernes);
             case Calendar.SATURDAY:
-                return "Sabado";
+                return getString(R.string.sabado);
             case Calendar.SUNDAY:
-                return "Domingo";
+                return getString(R.string.domingo);
         }
         return "";
     }

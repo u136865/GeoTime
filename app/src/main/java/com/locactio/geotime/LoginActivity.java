@@ -14,9 +14,12 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import com.locactio.geotime.WS.LoginREST;
 import com.locactio.geotime.WS.LoginResponseHandler;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Template {
 
     EditText correo;
     EditText pass;
@@ -31,13 +34,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         pref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
         correo = findViewById(R.id.email);
         pass = findViewById(R.id.password);
         correo.setText(pref.getString(userTkn,""));
         pass.setText(pref.getString(pinTkn,""));
         coordinatorLayout = findViewById(R.id.coordinator);
+
     }
+
+
 
     public void conectar(View view) {
 
@@ -69,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString(pinTkn,pass.getText().toString());
                 editor.commit();
 
+                pulsado = false;
                 Intent i = new Intent(LoginActivity.this, PrincipalActivity.class);
                 i.putExtra("token", token);
                 i.putExtra("name", nombre);

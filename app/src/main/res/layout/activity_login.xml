@@ -11,15 +11,27 @@
     android:layout_height="match_parent"
     android:background="@color/naranjaLogo">
 
+    <!-- android:src="@drawable/intratime"-->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:id="@+id/img_central"
         android:layout_marginTop="35dp"
         android:scaleType="centerInside"
-        android:src="@drawable/intratime"
         android:layout_marginStart="70dp"
+        android:src="@mipmap/ic_launcher"
         android:layout_marginEnd="70dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/img_central"
+        android:layout_marginTop="25sp"
+        android:text="GeoTime"
+        android:textColor="@color/blanco"
+        android:textSize="45sp"
+        />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

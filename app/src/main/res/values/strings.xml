@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">GeoTime</string>
     <string name="correo">Correo electrónico</string>
-    <string name="contrasena">Contraseña</string>
+    <string name="contrasena">Pin</string>
     <string name="conectar">Conectar</string>
     <string name="error_ocurred">Ha ocurrido un error</string>
     <string name="error_login">Usuario y/o contraseña incorrectos</string>
@@ -14,4 +14,12 @@
     <string name="horas_trabajadas">HORAS TRABAJADAS</string>
     <string name="horas_restantes">HORAS RESTANTES</string>
     <string name="tiempo_restante">TIEMPO RESTANTE</string>
+    <string name="lunes">Lunes</string>
+    <string name="martes">Martes</string>
+    <string name="miercoles">Miércoles</string>
+    <string name="jueves">Jueves</string>
+    <string name="viernes">Viernes</string>
+    <string name="sabado">Sábado</string>
+    <string name="domingo">Domingo</string>
+    <string name="vacaciones">Vacaciones</string>
 </resources>

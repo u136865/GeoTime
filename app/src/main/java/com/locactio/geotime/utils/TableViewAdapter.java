@@ -77,6 +77,9 @@ public class TableViewAdapter extends ArrayAdapter<Clocking> {
             fecha.setText(String.format("%02d-%02d-%d", c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1, c.get(Calendar.YEAR)));
             hora.setText(String.format("%02d:%02d:%02d", c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), c.get(Calendar.SECOND)));
 
+            if (clocking.getTipo() == 6)
+                hora.setText(getContext().getString(R.string.vacaciones));
+
         }catch (Exception e)
         {
             e.printStackTrace();
