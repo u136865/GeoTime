@@ -39,7 +39,7 @@ public class Week {
 
     public void calculateTimes(){
         Log.d("Calculate Times", "Calc");
-
+        segundosTrabajados = 0;
         if (days.get(0).getFichajes().get(0).getTipo() == 0 || days.get(0).getFichajes().get(0).getTipo() == 2)
             trabajando = true;
 

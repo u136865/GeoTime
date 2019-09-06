@@ -48,7 +48,10 @@ public class Day {
     }
 
     public void calculateTimes() {
-
+        horaSalida = new Date(0);
+        segundosTrabajados = 0;
+        segundosRestantes = 0;
+        descanso = 0;
 
         fecha = fichajes.get(0).getMomento();
 
@@ -209,6 +212,8 @@ public class Day {
 
         if (trabajando)
         {
+            calculateTimes();
+            semana.calculateTimes();
             long tiempoRestante = semana.getSegundosObjetivo() - semana.getSegundosTrabajados();
             long salidaTeorica = horaSalida.getTime() - tiempoRestante;
             Date sT = new Date(salidaTeorica);
