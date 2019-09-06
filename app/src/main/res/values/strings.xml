@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">GeoTime</string>
+    <string name="correo">Correo electrónico</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="conectar">Conectar</string>
+    <string name="error_ocurred">Ha ocurrido un error</string>
+    <string name="error_login">Usuario y/o contraseña incorrectos</string>
+    <string name="error_autenticacion">Ha ocurrido un error en la autenticación</string>
+    <string name="title_activity_principal">PrincipalActivity</string>
+    <string name="trabajado">TRABAJADO</string>
+    <string name="hora_salida">HORA SALIDA</string>
+    <string name="descansado">DESCANSADO</string>
+    <string name="total_semana">TOTAL SEMANA</string>
+    <string name="horas_trabajadas">HORAS TRABAJADAS</string>
+    <string name="horas_restantes">HORAS RESTANTES</string>
+    <string name="tiempo_restante">TIEMPO RESTANTE</string>
+</resources>

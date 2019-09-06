@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/coordinator"
+    tools:context=".PrincipalActivity">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/naranjaLogo">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/seleccion_fecha">
+
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:id="@+id/frameStart">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="anterior"
+                android:background="@color/clearColor"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:src="@drawable/ic_flecha_atras_blanco"/>
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/frameStart"
+            android:layout_toStartOf="@id/frameEnd"
+            android:id="@+id/fechaTitulo"
+            android:textColor="@color/blanco"
+            android:lines="1"
+            android:gravity="center"
+            android:textSize="21sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMaxTextSize="21sp"/>
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/frameEnd">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="posterior"
+                android:background="@color/clearColor"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="7dp"
+                android:src="@drawable/ic_flecha_delante_blanco"/>
+        </FrameLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:id="@+id/texto1"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/seleccion_fecha"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/blanco"
+            android:text="@string/trabajado"
+            android:textSize="20sp"
+            android:id="@+id/title1"
+            android:layout_marginStart="15dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:textColor="@color/blanco"
+            android:textSize="20sp"
+            android:gravity="end"
+            android:id="@+id/detail1"
+            android:layout_marginEnd="15dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:id="@+id/texto2"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/texto1"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/blanco"
+            android:text="@string/hora_salida"
+            android:textSize="20sp"
+            android:id="@+id/title3"
+            android:layout_marginStart="15dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:textColor="@color/blanco"
+            android:textSize="20sp"
+            android:gravity="end"
+            android:id="@+id/detail3"
+            android:layout_marginEnd="15dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:id="@+id/texto3"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/texto2"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/blanco"
+            android:text="@string/descansado"
+            android:textSize="20sp"
+            android:id="@+id/title2"
+            android:layout_marginStart="15dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:textColor="@color/blanco"
+            android:textSize="20sp"
+            android:gravity="end"
+            android:id="@+id/detail2"
+            android:layout_marginEnd="15dp"/>
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/segmented"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="25dp"
+        android:background="@color/blanco"
+        android:layout_below="@id/texto3"
+        android:id="@+id/table"/>
+    
+    <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/segmented"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        app:distributeEvenly="true"
+        app:segments="@array/segmentedItems"
+        app:columnCount="2"
+        app:textVerticalPadding="8dp"
+        app:textSize="20dp"
+        app:strokeWidth="2dp"
+        app:radius="5dp"
+
+        app:selectedBackgroundColor="@color/naranjaLogo"
+        app:selectedStrokeColor="@color/blanco"
+        app:selectedTextColor="@color/blanco"
+
+
+        app:unSelectedBackgroundColor="@color/blanco"
+        app:unSelectedTextColor="@color/naranjaLogo"
+        app:unSelectedStrokeColor="@color/blanco"
+        />
+
+</RelativeLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
