@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import static java.util.Calendar.FRIDAY;
+import static java.util.Calendar.MILLISECOND;
 import static java.util.Calendar.SECOND;
 
 public class Day {
@@ -125,15 +126,21 @@ public class Day {
             //cD.add(SECOND,1);
             descanso += difDate;
             horaSalida = new Date((segundosRestantes * 1000) - 3600000);
-
-
         }
 
         if (trabajando)
         {
-            Date ahora = new Date();
+            Calendar c = Calendar.getInstance();
+            Log.d("Calendar antes: ", c.getTime().toString());
+            Log.d("Resto: ", fichajes.get(0).getMomento().toString());
+            c.add(SECOND, -((int) (fichajes.get(0).getMomento().getTime() / 1000)));
+
+            Log.d("Calendar despues:", c.getTime().toString());
+            Date ahora = c.getTime();
             Date hF = fichajes.get(0).getMomento();
-            long difDate = (ahora.getTime() - hF.getTime())/1000;
+            Date nuevo = new Date(ahora.getTime() - hF.getTime());
+            long difDate = c.getTime().getTime()/1000;
+//            long difDate = (ahora.getTime() - hF.getTime())/1000;
             segundosTrabajados += difDate;
             segundosRestantes = Math.round(horasDiarias * 3600) - segundosTrabajados;
 
@@ -224,7 +231,7 @@ public class Day {
             long tiempoRestante = semana.getSegundosObjetivo() - semana.getSegundosTrabajados();
             c = Calendar.getInstance();
             c.add(SECOND, (int) tiempoRestante);
-            
+
             return String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":"+String.format("%02d", c.get(Calendar.MINUTE)) + ":"+String.format("%02d", c.get(SECOND)) + "*";
         }
         return "";
