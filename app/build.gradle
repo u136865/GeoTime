@@ -24,6 +24,7 @@ android {
         variant.outputs.all {
             outputFileName = "${APP_NAME}-${variant.name}-v${variant.versionName}_${variant.versionCode}.apk"
         }
+
     }
 
 }

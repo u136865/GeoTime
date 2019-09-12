@@ -1,16 +1,17 @@
 package com.locactio.geotime;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,8 +33,6 @@ import java.util.List;
 import segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl;
 import segmented_control.widget.custom.android.com.segmentedcontrol.item_row_column.SegmentViewHolder;
 import segmented_control.widget.custom.android.com.segmentedcontrol.listeners.OnSegmentSelectRequestListener;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class PrincipalActivity extends Template {
 
@@ -52,14 +51,18 @@ public class PrincipalActivity extends Template {
     ListView table;
     TableViewAdapter adapter;
     SegmentedControl segmentedControl;
-    TextView t1,t2,t3,d1,d2,d3,ft;
+    SegmentedControl segmentedControl2;
+    SegmentViewHolder sC1, sC2;
+    TextView t1, t2, t3, d1, d2, d3, ft;
     Day diaSeleccionado;
     Week semanaSeleccionada;
     private static final String userTkn = "x2Lhp3Iun5Nc";
     private static final String pinTkn = "9V1%YaPO&dX&";
     private static SharedPreferences pref;
+    private boolean seleccionManual = false;
     KProgressHUD hud;
     Date startOfSummer, endOfSummer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +71,7 @@ public class PrincipalActivity extends Template {
 
         coordinatorLayout = findViewById(R.id.coordinator);
         segmentedControl = findViewById(R.id.segmented);
+        segmentedControl2 = findViewById(R.id.segmented0);
         table = findViewById(R.id.table);
         t1 = findViewById(R.id.title1);
         t2 = findViewById(R.id.title2);
@@ -80,18 +84,18 @@ public class PrincipalActivity extends Template {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, 1);
         c.set(Calendar.MONTH, 6);
-        c.set(Calendar.HOUR_OF_DAY,0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND,0);
+        c.set(Calendar.SECOND, 0);
         c.add(Calendar.SECOND, -1);
         startOfSummer = c.getTime();
 
         c.set(Calendar.DAY_OF_MONTH, 31);
         c.set(Calendar.MONTH, 7);
-        c.set(Calendar.HOUR_OF_DAY,23);
+        c.set(Calendar.HOUR_OF_DAY, 23);
         c.set(Calendar.MINUTE, 59);
-        c.set(Calendar.SECOND,59);
-        c.add(Calendar.SECOND,1);
+        c.set(Calendar.SECOND, 59);
+        c.add(Calendar.SECOND, 1);
         endOfSummer = c.getTime();
 
 
@@ -117,11 +121,11 @@ public class PrincipalActivity extends Template {
         Intent i = getIntent();
         token = i.getStringExtra("token");
         nombreCompleto = i.getStringExtra("name");
-        hours = i.getIntExtra("hours",41);
+        hours = i.getIntExtra("hours", 41);
 
         c = Calendar.getInstance();
         today = c.getTime();
-        c.add(Calendar.DAY_OF_MONTH, -c.get(Calendar.DAY_OF_WEEK) + 2 );
+        c.add(Calendar.DAY_OF_MONTH, -c.get(Calendar.DAY_OF_WEEK) + 2);
         monday = c.getTime();
         c.add(Calendar.DAY_OF_MONTH, 6);
         sunday = c.getTime();
@@ -147,40 +151,96 @@ public class PrincipalActivity extends Template {
         table.setAdapter(adapter);
 
         segmentedControl.setOnSegmentSelectRequestListener(new OnSegmentSelectRequestListener() {
+                                                               @Override
+                                                               public boolean onSegmentSelectRequest(SegmentViewHolder segmentViewHolder) {
+
+                                                                   refreshScreenData(false);
+
+                                                                   Log.d("SEGMENTED", "" + segmentViewHolder.getColumn() + " " + segmentViewHolder.getAbsolutePosition() + " " + segmentViewHolder);
+                                                                   sC1 = segmentViewHolder;
+                                                                   if (segmentViewHolder.getColumn() == 0) {
+                                                                       if (sameDay(diaSeleccionado.getFecha(), dias.get(0).getFecha())) {
+                                                                           seleccionarHoy(true);
+                                                                       } else {
+                                                                           seleccionarHoy(false);
+                                                                       }
+
+                                                                   } else if (segmentViewHolder.getColumn() == 1) {
+                                                                       if (sameWeek(semanaSeleccionada.getDays().get(0).getFecha(), dias.get(0).getFecha())) {
+                                                                           seleccionarHoy(true);
+                                                                       } else {
+                                                                           seleccionarHoy(false);
+                                                                       }
+                                                                   }
+
+                                                                   return true;
+                                                               }
+                                                           }
+        );
+
+        segmentedControl2.setSelectedSegment(0);
+
+        segmentedControl2.setOnSegmentSelectRequestListener(new OnSegmentSelectRequestListener() {
             @Override
             public boolean onSegmentSelectRequest(SegmentViewHolder segmentViewHolder) {
-                refreshScreenData(false);
+
+                if (seleccionManual) {
+                    seleccionManual = false;
+                    return true;
+                }
+
+                if (sC1 != null) {
+                    if (sC1.getColumn() == 0) {
+                        diaSeleccionado = dias.get(0);
+                        refreshScreenData(true);
+                    } else {
+                        semanaSeleccionada = semanas.get(0);
+                        //segmentedControl.setSelectedSegment(0);
+                        refreshScreenData(true);
+                    }
+                } else {
+                    if (segmentedControl.getLastSelectedAbsolutePosition() == 0) {
+                        diaSeleccionado = dias.get(0);
+                        refreshScreenData(true);
+                    } else if (segmentedControl.getLastSelectedAbsolutePosition() == 1) {
+                        semanaSeleccionada = semanas.get(0);
+                        //segmentedControl.setSelectedSegment(0);
+                        refreshScreenData(true);
+                    }
+                }
+
+                sC1 = null;
+
                 return true;
             }
         });
     }
 
 
-    private void request_info(Date d1, Date d2)
-    {
+    private void request_info(Date d1, Date d2) {
         DataREST.execute(token, d1, d2, new ClockingResponseHandler() {
             @Override
             public void onError() {
                 hud.dismiss();
-                Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred),Snackbar.LENGTH_LONG).show();
+                Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
             }
 
             @Override
             public void onRequestFailure() {
                 pref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
-                String user = pref.getString(userTkn,"");
+                String user = pref.getString(userTkn, "");
                 String pin = pref.getString(pinTkn, "");
                 LoginREST.execute(user, pin, new LoginResponseHandler() {
                     @Override
                     public void onError() {
                         hud.dismiss();
-                        Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred),Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onLoginFailure() {
                         hud.dismiss();
-                        Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred),Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -203,24 +263,19 @@ public class PrincipalActivity extends Template {
                 Date valorandoW = new Date(0);
                 Day inProgress = null;
                 Week weekInProgress = null;
-                for (Clocking c : horasTotales)
-                {
-                    if (!sameDay(valorando, c.getMomento()))
-                    {
+                for (Clocking c : horasTotales) {
+                    if (!sameDay(valorando, c.getMomento())) {
                         valorando = c.getMomento();
 
-                        if(inProgress != null)
-                        {
+                        if (inProgress != null) {
                             inProgress.calculateTimes();
                             dias.add(inProgress);
 
 
-                            if (!sameWeek(valorandoW, inProgress.getFecha()))
-                            {
+                            if (!sameWeek(valorandoW, inProgress.getFecha())) {
                                 valorandoW = inProgress.getFecha();
 
-                                if(weekInProgress != null)
-                                {
+                                if (weekInProgress != null) {
                                     weekInProgress.calculateTimes();
                                     semanas.add(weekInProgress);
                                 }
@@ -263,71 +318,67 @@ public class PrincipalActivity extends Template {
     }
 
 
-    private void refreshScreenData(boolean init)
-    {
+    private void refreshScreenData(boolean init) {
         Calendar c = Calendar.getInstance();
         int selected = segmentedControl.getLastSelectedAbsolutePosition();
-        if ( (selected == 0 && init) || (selected == 1 && !init))
-        {
+        if ((selected == 0 && init) || (selected == 1 && !init)) {
             t1.setText(R.string.trabajado);
-            if (diaSeleccionado.isEnDescanso())
-            {
+            if (diaSeleccionado.isEnDescanso()) {
                 t2.setText(R.string.tiempo_restante);
-            }else {
+            } else {
                 t2.setText(R.string.hora_salida);
             }
             t3.setText(R.string.descansado);
             Date trabajado = new Date(diaSeleccionado.getSegundosTrabajados() * 1000);
             c.setTime(trabajado);
-            d1.setText(String.format("%02d",c.get(Calendar.HOUR_OF_DAY)-1) + ":" + String.format("%02d",c.get(Calendar.MINUTE)) + ":" + String.format("%02d",c.get(Calendar.SECOND)));
+            d1.setText(String.format("%02d", c.get(Calendar.HOUR_OF_DAY) - 1) + ":" + String.format("%02d", c.get(Calendar.MINUTE)) + ":" + String.format("%02d", c.get(Calendar.SECOND)));
             c.setTime(diaSeleccionado.getHoraSalida());
-            d2.setText(String.format("%02d",c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",c.get(Calendar.MINUTE)) + ":" + String.format("%02d",c.get(Calendar.SECOND)));
+            d2.setText(String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", c.get(Calendar.MINUTE)) + ":" + String.format("%02d", c.get(Calendar.SECOND)));
             String recalculado = diaSeleccionado.friday(semanas);
-            d2.setText(recalculado.equalsIgnoreCase("")?d2.getText():recalculado);
+            d2.setText(recalculado.equalsIgnoreCase("") ? d2.getText() : recalculado);
 
             Date descansando = new Date(diaSeleccionado.getDescanso() * 1000);
             c.setTime(descansando);
-            d3.setText(String.format("%02d",c.get(Calendar.HOUR_OF_DAY)-1) + ":" + String.format("%02d",c.get(Calendar.MINUTE)) + ":" + String.format("%02d",c.get(Calendar.SECOND)));
+            d3.setText(String.format("%02d", c.get(Calendar.HOUR_OF_DAY) - 1) + ":" + String.format("%02d", c.get(Calendar.MINUTE)) + ":" + String.format("%02d", c.get(Calendar.SECOND)));
             c.setTime(diaSeleccionado.getFecha());
-            ft.setText(diaDeLaSemana() + ", " + String.format("%02d",c.get(Calendar.DAY_OF_MONTH)) + "-" + String.format("%02d",c.get(Calendar.MONTH)+1) + "-" + String.format("%04d",c.get(Calendar.YEAR)));
+            ft.setText(diaDeLaSemana() + ", " + String.format("%02d", c.get(Calendar.DAY_OF_MONTH)) + "-" + String.format("%02d", c.get(Calendar.MONTH) + 1) + "-" + String.format("%04d", c.get(Calendar.YEAR)));
             adapter.renewData(diaSeleccionado.getFichajes());
-        }else{
+        } else {
             t1.setText(R.string.total_semana);
             t3.setText(R.string.horas_trabajadas);
             t2.setText(R.string.horas_restantes);
 
             long horas = semanaSeleccionada.getSegundosObjetivo() / 3600;
-            long minutos = (semanaSeleccionada.getSegundosObjetivo() - (horas*3600)) / 60;
-            long segundos = (semanaSeleccionada.getSegundosObjetivo() - (horas*3600) - (minutos * 60));
-            d1.setText(String.format("%02d",horas) + ":" + String.format("%02d",minutos) + ":" + String.format("%02d",segundos));
+            long minutos = (semanaSeleccionada.getSegundosObjetivo() - (horas * 3600)) / 60;
+            long segundos = (semanaSeleccionada.getSegundosObjetivo() - (horas * 3600) - (minutos * 60));
+            d1.setText(String.format("%02d", horas) + ":" + String.format("%02d", minutos) + ":" + String.format("%02d", segundos));
 
             horas = semanaSeleccionada.getSegundosTrabajados() / 3600;
-            minutos = (semanaSeleccionada.getSegundosTrabajados() - (horas*3600)) / 60;
-            segundos = (semanaSeleccionada.getSegundosTrabajados() - (horas*3600) - (minutos * 60));
-            d3.setText(String.format("%02d",horas) + ":" + String.format("%02d",minutos) + ":" + String.format("%02d",segundos));
+            minutos = (semanaSeleccionada.getSegundosTrabajados() - (horas * 3600)) / 60;
+            segundos = (semanaSeleccionada.getSegundosTrabajados() - (horas * 3600) - (minutos * 60));
+            d3.setText(String.format("%02d", horas) + ":" + String.format("%02d", minutos) + ":" + String.format("%02d", segundos));
 
             long segundosRestantes = semanaSeleccionada.getSegundosObjetivo() - semanaSeleccionada.getSegundosTrabajados();
             if (segundosRestantes < 0)
                 segundosRestantes = 0;
 
             horas = segundosRestantes / 3600;
-            minutos = (segundosRestantes - (horas*3600)) / 60;
-            segundos = (segundosRestantes - (horas*3600) - (minutos * 60));
-            d2.setText(String.format("%02d",horas) + ":" + String.format("%02d",minutos) + ":" + String.format("%02d",segundos));
+            minutos = (segundosRestantes - (horas * 3600)) / 60;
+            segundos = (segundosRestantes - (horas * 3600) - (minutos * 60));
+            d2.setText(String.format("%02d", horas) + ":" + String.format("%02d", minutos) + ":" + String.format("%02d", segundos));
 
             c.setTime(semanaSeleccionada.getHours().get(0).getMomento());
-            c.add(Calendar.DAY_OF_MONTH, -c.get(Calendar.DAY_OF_WEEK) + 2 );
-            ft.setText(String.format("%02d",c.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",c.get(Calendar.MONTH)+1) + "/" + String.format("%04d",c.get(Calendar.YEAR)) + " - ");
+            c.add(Calendar.DAY_OF_MONTH, -c.get(Calendar.DAY_OF_WEEK) + 2);
+            ft.setText(String.format("%02d", c.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", c.get(Calendar.MONTH) + 1) + "/" + String.format("%04d", c.get(Calendar.YEAR)) + " - ");
             c.add(Calendar.DAY_OF_MONTH, 6);
-            ft.setText(ft.getText() + String.format("%02d",c.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",c.get(Calendar.MONTH)+1) + "/" + String.format("%04d",c.get(Calendar.YEAR)));
+            ft.setText(ft.getText() + String.format("%02d", c.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", c.get(Calendar.MONTH) + 1) + "/" + String.format("%04d", c.get(Calendar.YEAR)));
 
             adapter.renewData(semanaSeleccionada.getHours());
         }
     }
 
 
-    private boolean sameDay(Date date1, Date date2)
-    {
+    private boolean sameDay(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
@@ -337,8 +388,7 @@ public class PrincipalActivity extends Template {
         return sameDay;
     }
 
-    public static boolean sameWeek(Date date1, Date date2)
-    {
+    public static boolean sameWeek(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
@@ -348,13 +398,11 @@ public class PrincipalActivity extends Template {
         return sameDay;
     }
 
-    private String diaDeLaSemana()
-    {
+    private String diaDeLaSemana() {
         Calendar c = Calendar.getInstance();
         c.setTime(diaSeleccionado.getFecha());
 
-        switch (c.get(Calendar.DAY_OF_WEEK))
-        {
+        switch (c.get(Calendar.DAY_OF_WEEK)) {
             case Calendar.MONDAY:
                 return getString(R.string.lunes);
             case Calendar.TUESDAY:
@@ -376,34 +424,122 @@ public class PrincipalActivity extends Template {
     public void anterior(View view) {
         int selected = segmentedControl.getLastSelectedAbsolutePosition();
 
-        if (selected == 0)
-        {
+        if (selected == 0) {
 
             if (dias.indexOf(diaSeleccionado) < dias.size() - 1) {
                 diaSeleccionado = dias.get(dias.indexOf(diaSeleccionado) + 1);
                 refreshScreenData(true);
             }
-        }else{
-            if (semanas.indexOf(semanaSeleccionada) < semanas.size() - 1){
+
+            segmentedControl2.clearSelection();
+
+        } else {
+            if (semanas.indexOf(semanaSeleccionada) < semanas.size() - 1) {
                 semanaSeleccionada = semanas.get(semanas.indexOf(semanaSeleccionada) + 1);
                 refreshScreenData(true);
             }
+
+            segmentedControl2.clearSelection();
+
+
         }
+
+
     }
 
     public void posterior(View view) {
         int selected = segmentedControl.getLastSelectedAbsolutePosition();
-        if (selected == 0)
-        {
+        if (selected == 0) {
             if (dias.indexOf(diaSeleccionado) > 0) {
                 diaSeleccionado = dias.get(dias.indexOf(diaSeleccionado) - 1);
                 refreshScreenData(true);
             }
-        }else{
-            if (semanas.indexOf(semanaSeleccionada) > 0){
+
+            if (sameDay(diaSeleccionado.getFecha(), dias.get(0).getFecha())) {
+                seleccionarHoy(true);
+            } else {
+                seleccionarHoy(false);
+            }
+
+        } else {
+            if (semanas.indexOf(semanaSeleccionada) > 0) {
                 semanaSeleccionada = semanas.get(semanas.indexOf(semanaSeleccionada) - 1);
-                refreshScreenData( true);
+                refreshScreenData(true);
+            }
+
+            if (sameWeek(semanaSeleccionada.getDays().get(0).getFecha(), semanas.get(0).getDays().get(0).getFecha())) {
+                seleccionarHoy(true);
+            } else {
+                seleccionarHoy(false);
             }
         }
+    }
+
+    void seleccionarHoy(boolean seleccionar) {
+        Boolean seleccionado = false;
+        if (segmentedControl2.getLastSelectedAbsolutePosition() == 0)
+            seleccionado = true;
+        seleccionManual = !seleccionado && seleccionar;
+        if (seleccionar) {
+            segmentedControl2.setSelectedSegment(0);
+        } else {
+            segmentedControl2.clearSelection();
+        }
+    }
+
+    Calendar myCalendar = Calendar.getInstance();
+
+    public void seleccionFecha(View view) {
+
+
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                if (segmentedControl.getLastSelectedAbsolutePosition() == 0) {
+                    for (Day d : dias) {
+                        if (sameDay(d.getFecha(), myCalendar.getTime())) {
+                            diaSeleccionado = d;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refreshScreenData(true);
+                                }
+                            });
+                            break;
+                        }
+                    }
+                } else if (segmentedControl.getLastSelectedAbsolutePosition() == 1) {
+                    for (Week w : semanas) {
+                        if (sameWeek(myCalendar.getTime(), w.getDays().get(0).getFecha())) {
+                            semanaSeleccionada = w;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    refreshScreenData(true);
+                                }
+                            });
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+        };
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, date, myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.getDatePicker().setFirstDayOfWeek(Calendar.MONDAY);
+        datePickerDialog.show();
+
     }
 }
