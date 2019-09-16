@@ -290,6 +290,20 @@ public class PrincipalActivity extends Template {
 
                 }
 
+                if (dias.size() == 0)
+                {
+                    inProgress.calculateTimes();
+                    dias.add(inProgress);
+                }
+
+                if (semanas.size() == 0)
+                {
+                    weekInProgress = new Week(hours * 1.0f, startOfSummer, endOfSummer);
+                    weekInProgress.addDay(inProgress);
+                    weekInProgress.calculateTimes();
+                    semanas.add(weekInProgress);
+                }
+
 /*               if (segmentedControl.getLastSelectedAbsolutePosition() == 0)
                 {
                     for (Clocking c: dias.get(0).getFichajes())

@@ -219,7 +219,7 @@
         android:layout_marginEnd="25dp"
         app:distributeEvenly="true"
         app:segments="@array/segmentedItems"
-        app:columnCount="3"
+        app:columnCount="2"
         app:textVerticalPadding="8dp"
         app:textSize="20dp"
         app:strokeWidth="2dp"
