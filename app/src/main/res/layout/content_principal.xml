@@ -1,20 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".PrincipalActivity"
-    tools:showIn="@layout/activity_principal">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/naranjaLogo">
+
+        <LinearLayout
+            android:id="@+id/texto1"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_below="@+id/seleccion_fecha"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeTextType="uniform"
+                android:text="@string/trabajado"
+                android:textColor="@color/blanco"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/detail1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="2"
+                android:gravity="end"
+                android:textColor="@color/blanco"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/texto2"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_below="@+id/texto1"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeTextType="uniform"
+                android:text="@string/hora_salida"
+                android:textColor="@color/blanco"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/detail3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="2"
+                android:gravity="end"
+                android:textColor="@color/blanco"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/texto3"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_below="@+id/texto2"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="25dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeTextType="uniform"
+                android:text="@string/descansado"
+                android:textColor="@color/blanco"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/detail2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="2"
+                android:gravity="end"
+                android:textColor="@color/blanco"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/seleccion_fecha"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toStartOf="@id/frameEnd"
+                android:layout_toEndOf="@+id/frameStart"
+                android:background="@color/clearColor"
+                android:onClick="seleccionFecha" />
+
+            <FrameLayout
+                android:id="@+id/frameStart"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/clearColor"
+                    android:onClick="anterior" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="7dp"
+                    android:src="@drawable/ic_flecha_atras_blanco" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameEnd"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/clearColor"
+                    android:onClick="posterior" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="7dp"
+                    android:src="@drawable/ic_flecha_delante_blanco" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/fechaTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toStartOf="@id/frameEnd"
+                android:layout_toEndOf="@+id/frameStart"
+                android:autoSizeMaxTextSize="21sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:lines="1"
+                android:textColor="@color/blanco"
+                android:textSize="21sp" />
+        </RelativeLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/segmented0"
+            android:layout_below="@id/texto3"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="25dp"
+            android:background="@color/blanco">
+
+            <ListView
+                android:id="@+id/table"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/blanco" />
 
 
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+        <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
+            android:id="@+id/segmented0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/segmented"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="15dp"
+            app:distributeEvenly="true"
+            app:radius="5dp"
+            app:segments="@array/todayItems"
+            app:selectedBackgroundColor="@color/naranjaLogo"
+            app:selectedStrokeColor="@color/blanco"
+            app:selectedTextColor="@color/blanco"
+
+            app:strokeWidth="2dp"
+            app:textSize="20dp"
+            app:textVerticalPadding="8dp"
+
+
+            app:unSelectedBackgroundColor="@color/blanco"
+            app:unSelectedStrokeColor="@color/blanco"
+            app:unSelectedTextColor="@color/naranjaLogo" />
+
+        <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
+            android:id="@+id/segmented"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="15dp"
+            app:columnCount="2"
+            app:distributeEvenly="true"
+            app:radius="5dp"
+            app:segments="@array/segmentedItems"
+            app:selectedBackgroundColor="@color/naranjaLogo"
+            app:selectedStrokeColor="@color/blanco"
+            app:selectedTextColor="@color/blanco"
+
+            app:strokeWidth="2dp"
+            app:textSize="20dp"
+            app:textVerticalPadding="8dp"
+
+
+            app:unSelectedBackgroundColor="@color/blanco"
+            app:unSelectedStrokeColor="@color/blanco"
+            app:unSelectedTextColor="@color/naranjaLogo" />
 
     </RelativeLayout>
-
 </android.support.design.widget.CoordinatorLayout>
+

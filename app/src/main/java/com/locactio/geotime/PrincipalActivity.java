@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
+import com.lemonade.widgets.slidesidemenu.SlideSideMenuTransitionLayout;
 import com.locactio.geotime.WS.ClockingResponseHandler;
 import com.locactio.geotime.WS.DataREST;
 import com.locactio.geotime.WS.LoginREST;
@@ -44,11 +45,12 @@ public class PrincipalActivity extends Template {
     int hours;
     Date today, monday, sunday, yearAgo;
     ArrayList<Clocking> horasSemana;
-    ArrayList<Clocking> horas;
     ArrayList<Clocking> horasTotales;
 
     ArrayList<Day> dias = new ArrayList<>();
     ArrayList<Week> semanas = new ArrayList<>();
+
+    private SlideSideMenuTransitionLayout mSlideSideMenu;
 
     CoordinatorLayout coordinatorLayout;
     ListView table;
@@ -67,6 +69,7 @@ public class PrincipalActivity extends Template {
     Date startOfSummer, endOfSummer;
     Boolean onCreateRequest = true;
     SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,8 @@ public class PrincipalActivity extends Template {
         segmentedControl = findViewById(R.id.segmented);
         segmentedControl2 = findViewById(R.id.segmented0);
         swipeRefreshLayout = findViewById(R.id.refreshLayout);
+        mSlideSideMenu = (SlideSideMenuTransitionLayout)findViewById(R.id.slide_side_menu);
+
         table = findViewById(R.id.table);
         t1 = findViewById(R.id.title1);
         t2 = findViewById(R.id.title2);
@@ -224,30 +229,38 @@ public class PrincipalActivity extends Template {
             public void onRefresh() {
                 Calendar c = Calendar.getInstance();
                 c.setTime(dias.get(0).getFecha());
-                c.add(Calendar.SECOND,1);
-                request_info(c.getTime(),new Date());
+                c.add(Calendar.SECOND, 1);
+                request_info(c.getTime(), new Date());
             }
         });
 
     }
 
     @Override
-    protected void onResume()
-    {
+    public void onBackPressed() {
+        if (mSlideSideMenu != null && mSlideSideMenu.closeSideMenu()) {
+            // Closed the side menu, override the default back pressed behavior
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
 //        refreshScreenData(true);
 
-        if (!onCreateRequest)
-        {
+        if (!onCreateRequest) {
             Calendar c = Calendar.getInstance();
             c.setTime(dias.get(0).getFecha());
-            c.add(Calendar.SECOND,1);
-            request_info(c.getTime(),new Date());
+            c.add(Calendar.SECOND, 1);
+            request_info(c.getTime(), new Date());
         }
     }
+
     Chronometer chronometer;
-    private void chronometer(boolean activar)
-    {
+
+    private void chronometer(boolean activar) {
         if (chronometer == null) {
             chronometer = new Chronometer(this);
             chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
@@ -307,20 +320,9 @@ public class PrincipalActivity extends Template {
             @Override
             public void onResponse(List<Clocking> clockingList) {
                 onCreateRequest = false;
-                horasTotales.addAll(0,clockingList);
-                if (horas == null)
-                    horas = new ArrayList<>();
+                horasTotales.addAll(0, clockingList);
                 dias.clear();
                 semanas.clear();
-
-                Date diaS;
-                Date semanaS;
-
-                if (diaSeleccionado != null && semanaSeleccionada != null)
-                {
-                    diaS = diaSeleccionado.getFecha();
-                    semanaS = semanaSeleccionada.getDays().get(0).getFecha();
-                }
 
                 Date valorando = new Date(0);
                 Date valorandoW = new Date(0);
@@ -353,31 +355,17 @@ public class PrincipalActivity extends Template {
 
                 }
 
-                if (dias.size() == 0)
-                {
+                if (dias.size() == 0) {
                     inProgress.calculateTimes();
                     dias.add(inProgress);
                 }
 
-                if (semanas.size() == 0)
-                {
+                if (semanas.size() == 0) {
                     weekInProgress = new Week(hours * 1.0f, startOfSummer, endOfSummer);
                     weekInProgress.addDay(inProgress);
                     weekInProgress.calculateTimes();
                     semanas.add(weekInProgress);
                 }
-
-/*               if (segmentedControl.getLastSelectedAbsolutePosition() == 0)
-                {
-                    for (Clocking c: dias.get(0).getFichajes())
-                    {
-                        if (sameDay(new Date(),c.getMomento()))
-                            horas.add(c);
-                    }
-                }else{
-                    horas.addAll(horasSemana);
-                }
-*/
 
                 diaSeleccionado = dias.get(0);
                 Calendar c = Calendar.getInstance();
@@ -456,13 +444,11 @@ public class PrincipalActivity extends Template {
 
             adapter.renewData(semanaSeleccionada.getHours());
         }
-        if (selected == 0 && sameDay(new Date(),diaSeleccionado.getFecha()))
-        {
+        if (selected == 0 && sameDay(new Date(), diaSeleccionado.getFecha())) {
             chronometer(true);
-        }else if (selected == 1 && sameWeek(new Date(), semanaSeleccionada.getDays().get(0).getFecha()))
-        {
+        } else if (selected == 1 && sameWeek(new Date(), semanaSeleccionada.getDays().get(0).getFecha())) {
             chronometer(true);
-        }else{
+        } else {
             chronometer(false);
         }
     }

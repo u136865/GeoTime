@@ -42,7 +42,7 @@ public class Week {
         segundosTrabajados = 0;
         if (days.get(0).getFichajes().get(0).getTipo() == 0 || days.get(0).getFichajes().get(0).getTipo() == 2)
             trabajando = true;
-
+        hours.clear();
         for (Day d : days)
         {
             segundosTrabajados += d.segundosTrabajados;
