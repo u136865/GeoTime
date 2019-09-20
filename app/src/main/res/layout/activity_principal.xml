@@ -172,7 +172,7 @@
             android:layout_marginEnd="15dp"/>
     </LinearLayout>
 
-    <ListView
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/segmented0"
@@ -182,7 +182,16 @@
         android:layout_marginTop="25dp"
         android:background="@color/blanco"
         android:layout_below="@id/texto3"
-        android:id="@+id/table"/>
+        android:id="@+id/refreshLayout">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blanco"
+            android:id="@+id/table"/>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
     <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl

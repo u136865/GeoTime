@@ -32,8 +32,10 @@ public class DataREST {
         Calendar end = Calendar.getInstance();
         end.setTime(to);
 
-        String st = start.get(Calendar.YEAR) + "-" + String.format("%02d",start.get(Calendar.MONTH)+1) + "-" + String.format("%02d",start.get(Calendar.DAY_OF_MONTH)) + "%00:00:00";
-        String nd = end.get(Calendar.YEAR) + "-" + String.format("%02d",end.get(Calendar.MONTH)+1) + "-" + String.format("%02d",end.get(Calendar.DAY_OF_MONTH)) + "%23:59:59";
+        String st = start.get(Calendar.YEAR) + "-" + String.format("%02d",start.get(Calendar.MONTH)+1) + "-" + String.format("%02d",start.get(Calendar.DAY_OF_MONTH)) +
+                " " + String.format("%02d",start.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",start.get(Calendar.MINUTE)) + ":" + String.format("%02d",start.get(Calendar.SECOND));
+        String nd = end.get(Calendar.YEAR) + "-" + String.format("%02d",end.get(Calendar.MONTH)+1) + "-" + String.format("%02d",end.get(Calendar.DAY_OF_MONTH)) +
+                " " + String.format("%02d",end.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d",end.get(Calendar.MINUTE)) + ":" + String.format("%02d",end.get(Calendar.SECOND));
 
         RestClient.USER_CLOCKINGS(token, st, nd, new Callback() {
             @Override

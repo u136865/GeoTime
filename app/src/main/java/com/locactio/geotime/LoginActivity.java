@@ -3,19 +3,15 @@ package com.locactio.geotime;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import com.kaopiz.kprogresshud.KProgressHUD;
 import com.locactio.geotime.WS.LoginREST;
 import com.locactio.geotime.WS.LoginResponseHandler;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 
@@ -38,19 +34,22 @@ public class LoginActivity extends Template {
         pref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
         correo = findViewById(R.id.email);
         pass = findViewById(R.id.password);
-        correo.setText(pref.getString(userTkn,""));
-        pass.setText(pref.getString(pinTkn,""));
+        correo.setText(pref.getString(userTkn, ""));
+        pass.setText(pref.getString(pinTkn, ""));
         coordinatorLayout = findViewById(R.id.coordinator);
+
+        String version = "Ver " + BuildConfig.VERSION_NAME + "_" + BuildConfig.VERSION_CODE;
+        ((TextView) findViewById(R.id.version)).setText(version);
+
 
     }
 
 
-
     public void conectar(View view) {
 
-        if(pulsado)
+        if (pulsado)
             return;
-            pulsado = true;
+        pulsado = true;
 
         LoginREST.execute(correo.getText().toString(), pass.getText().toString(), new LoginResponseHandler() {
             @Override
@@ -72,8 +71,8 @@ public class LoginActivity extends Template {
             @Override
             public void onResponse(String token, int horas, String nombre) {
                 SharedPreferences.Editor editor = pref.edit();
-                editor.putString(userTkn,correo.getText().toString());
-                editor.putString(pinTkn,pass.getText().toString());
+                editor.putString(userTkn, correo.getText().toString());
+                editor.putString(pinTkn, pass.getText().toString());
                 editor.commit();
 
                 pulsado = false;

@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -62,7 +65,8 @@ public class PrincipalActivity extends Template {
     private boolean seleccionManual = false;
     KProgressHUD hud;
     Date startOfSummer, endOfSummer;
-
+    Boolean onCreateRequest = true;
+    SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,7 @@ public class PrincipalActivity extends Template {
         coordinatorLayout = findViewById(R.id.coordinator);
         segmentedControl = findViewById(R.id.segmented);
         segmentedControl2 = findViewById(R.id.segmented0);
+        swipeRefreshLayout = findViewById(R.id.refreshLayout);
         table = findViewById(R.id.table);
         t1 = findViewById(R.id.title1);
         t2 = findViewById(R.id.title2);
@@ -143,7 +148,6 @@ public class PrincipalActivity extends Template {
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f)
                 .setBackgroundColor(getResources().getColor(R.color.naranjaFondo));
-        hud.show();
 
         request_info(yearAgo, sunday);
 
@@ -214,14 +218,61 @@ public class PrincipalActivity extends Template {
                 return true;
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Calendar c = Calendar.getInstance();
+                c.setTime(dias.get(0).getFecha());
+                c.add(Calendar.SECOND,1);
+                request_info(c.getTime(),new Date());
+            }
+        });
+
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+//        refreshScreenData(true);
+
+        if (!onCreateRequest)
+        {
+            Calendar c = Calendar.getInstance();
+            c.setTime(dias.get(0).getFecha());
+            c.add(Calendar.SECOND,1);
+            request_info(c.getTime(),new Date());
+        }
+    }
+    Chronometer chronometer;
+    private void chronometer(boolean activar)
+    {
+        if (chronometer == null) {
+            chronometer = new Chronometer(this);
+            chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+                @Override
+                public void onChronometerTick(Chronometer chronometer) {
+                    refreshScreenData(true);
+                }
+            });
+            chronometer.setBase(SystemClock.elapsedRealtime());
+        }
+
+        if (activar)
+            chronometer.start();
+        else
+            chronometer.stop();
+
+    }
 
     private void request_info(Date d1, Date d2) {
+        hud.show();
         DataREST.execute(token, d1, d2, new ClockingResponseHandler() {
             @Override
             public void onError() {
                 hud.dismiss();
+                swipeRefreshLayout.setRefreshing(false);
                 Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
             }
 
@@ -234,12 +285,14 @@ public class PrincipalActivity extends Template {
                     @Override
                     public void onError() {
                         hud.dismiss();
+                        swipeRefreshLayout.setRefreshing(false);
                         Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onLoginFailure() {
                         hud.dismiss();
+                        swipeRefreshLayout.setRefreshing(false);
                         Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
                     }
 
@@ -253,11 +306,21 @@ public class PrincipalActivity extends Template {
 
             @Override
             public void onResponse(List<Clocking> clockingList) {
-                horasTotales.addAll(clockingList);
-                if (horas != null)
-                    horas.clear();
-                else
+                onCreateRequest = false;
+                horasTotales.addAll(0,clockingList);
+                if (horas == null)
                     horas = new ArrayList<>();
+                dias.clear();
+                semanas.clear();
+
+                Date diaS;
+                Date semanaS;
+
+                if (diaSeleccionado != null && semanaSeleccionada != null)
+                {
+                    diaS = diaSeleccionado.getFecha();
+                    semanaS = semanaSeleccionada.getDays().get(0).getFecha();
+                }
 
                 Date valorando = new Date(0);
                 Date valorandoW = new Date(0);
@@ -325,6 +388,7 @@ public class PrincipalActivity extends Template {
                     @Override
                     public void run() {
                         refreshScreenData(true);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 });
             }
@@ -333,6 +397,9 @@ public class PrincipalActivity extends Template {
 
 
     private void refreshScreenData(boolean init) {
+        diaSeleccionado.calculateTimes();
+        semanaSeleccionada.calculateTimes();
+
         Calendar c = Calendar.getInstance();
         int selected = segmentedControl.getLastSelectedAbsolutePosition();
         if ((selected == 0 && init) || (selected == 1 && !init)) {
@@ -389,10 +456,21 @@ public class PrincipalActivity extends Template {
 
             adapter.renewData(semanaSeleccionada.getHours());
         }
+        if (selected == 0 && sameDay(new Date(),diaSeleccionado.getFecha()))
+        {
+            chronometer(true);
+        }else if (selected == 1 && sameWeek(new Date(), semanaSeleccionada.getDays().get(0).getFecha()))
+        {
+            chronometer(true);
+        }else{
+            chronometer(false);
+        }
     }
 
 
     private boolean sameDay(Date date1, Date date2) {
+        if (date1 == null || date2 == null)
+            return false;
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
@@ -403,6 +481,8 @@ public class PrincipalActivity extends Template {
     }
 
     public static boolean sameWeek(Date date1, Date date2) {
+        if (date1 == null || date2 == null)
+            return false;
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
