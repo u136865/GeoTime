@@ -24,6 +24,7 @@ import com.locactio.geotime.WS.ClockingResponseHandler;
 import com.locactio.geotime.WS.DataREST;
 import com.locactio.geotime.WS.LoginREST;
 import com.locactio.geotime.WS.LoginResponseHandler;
+import com.locactio.geotime.bbdd.facades.ClockingLab;
 import com.locactio.geotime.entities.Clocking;
 import com.locactio.geotime.entities.Day;
 import com.locactio.geotime.entities.Week;
@@ -154,7 +155,20 @@ public class PrincipalActivity extends Template {
                 .setDimAmount(0.5f)
                 .setBackgroundColor(getResources().getColor(R.color.naranjaFondo));
 
-        request_info(yearAgo, sunday);
+        Date prev = null;
+        horasTotales = ClockingLab.get(this).getClockings();
+
+        if (horasTotales.size() == 0)
+            prev = yearAgo;
+        else
+            prev = horasTotales.get(0).getMomento();
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(prev);
+        cal.add(Calendar.SECOND, 1);
+        prev = cal.getTime();
+
+        request_info(prev, sunday);
 
         adapter = new TableViewAdapter(PrincipalActivity.this, R.layout.hour_row, horasSemana);
         table.setAdapter(adapter);
@@ -324,6 +338,7 @@ public class PrincipalActivity extends Template {
                 dias.clear();
                 semanas.clear();
 
+                ClockingLab.get(PrincipalActivity.this).addAllClockings(clockingList);
                 Date valorando = new Date(0);
                 Date valorandoW = new Date(0);
                 Day inProgress = null;

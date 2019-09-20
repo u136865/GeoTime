@@ -9,14 +9,15 @@
         android:layout_height="match_parent">
 
         <include
-            layout="@layout/content_principal"
+            layout="@layout/menu_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </com.lemonade.widgets.slidesidemenu.SlideSideMenuContentCardView>
 
+    </com.lemonade.widgets.slidesidemenu.SlideSideMenuContentCardView>
     <include
-        layout="@layout/menu_list"
+        layout="@layout/content_principal"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </com.lemonade.widgets.slidesidemenu.SlideSideMenuTransitionLayout>

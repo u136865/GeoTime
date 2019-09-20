@@ -22,4 +22,5 @@
     <string name="sabado">Sábado</string>
     <string name="domingo">Domingo</string>
     <string name="vacaciones">Vacaciones</string>
+    <string name="horario">Horario</string>
 </resources>

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.locactio.geotime.WS.LoginREST;
 import com.locactio.geotime.WS.LoginResponseHandler;
+import com.locactio.geotime.bbdd.facades.ClockingLab;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 
@@ -70,6 +71,12 @@ public class LoginActivity extends Template {
 
             @Override
             public void onResponse(String token, int horas, String nombre) {
+                if (!pref.getString(userTkn, "").equalsIgnoreCase(correo.getText().toString()))
+                {
+                    ClockingLab.get(LoginActivity.this).deleteAllClockings();
+                }
+
+
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString(userTkn, correo.getText().toString());
                 editor.putString(pinTkn, pass.getText().toString());
