@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.locactio.geotime.PrincipalActivity;
+import com.locactio.geotime.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -214,7 +215,7 @@ public class Day {
 
          for (Week w : weeks)
          {
-             if (PrincipalActivity.sameWeek(w.days.get(0).getFecha(), fecha))
+             if (Utils.sameWeek(w.days.get(0).getFecha(), fecha))
              {
                  semana = w;
                  break;

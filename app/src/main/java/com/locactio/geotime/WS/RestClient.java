@@ -50,7 +50,6 @@ public class RestClient {
     public static void USER_CLOCKINGS(String token, String from, String to, Callback callback)
     {
         Log.e("GET", BASE_URL + CLOCKING_METHOD);
-
         String params = "?from=" + from + "&to=" + to;
         OkHttpClient client = buildClient();
         Request request = new Request.Builder()

@@ -19,40 +19,49 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:textColor="#ffffff"
-            android:textSize="20dp"
             android:clickable="true"
             android:onClick="horario"
+            android:focusable="true"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/rango"
+            android:textColor="#ffffff"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="20dp"
+            android:clickable="true"
+            android:onClick="rango"
             android:focusable="true" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Item 2"
+            android:text="@string/informe"
             android:textColor="#ffffff"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:clickable="true"
+            android:onClick="informes"
+            android:focusable="true" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Item 3"
+            android:text="@string/cerrar_sesion"
             android:textColor="#ffffff"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:textSize="20dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Item 4"
-            android:textColor="#ffffff"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:clickable="true"
+            android:onClick="cerrarSesion"
+            android:focusable="true" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

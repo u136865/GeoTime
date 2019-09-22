@@ -28,7 +28,4 @@ public class Template extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public void horario(View view) {
-        Log.d("Menu","Horario seleccionado");
-    }
 }

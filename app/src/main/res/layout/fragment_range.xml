@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/naranjaLogo">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/desdeLayout"
+            android:background="@color/naranjaLogo"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/desde"
+                android:padding="20dp"
+                android:textColor="@color/blanco"
+                android:layout_weight="2"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20sp"
+                android:layout_marginEnd="20dp"
+                android:focusable="false"
+                android:background="@drawable/edit_text_border"
+                android:layout_weight="1"
+                android:textColor="@color/blanco"
+                android:clickable="true"
+                android:id="@+id/desde_label"
+                android:gravity="center"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/naranjaLogo"
+            android:layout_below="@+id/desdeLayout"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/hasta"
+                android:padding="20dp"
+                android:textColor="@color/blanco"
+                android:layout_weight="2"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textSize="20sp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/edit_text_border"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:textColor="@color/blanco"
+                android:clickable="true"
+                android:id="@+id/hasta_label"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+
+
+
+
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

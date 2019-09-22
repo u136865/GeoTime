@@ -25,9 +25,14 @@ public class Week {
 
     Date initOfSummer, endOfSummer;
 
-    public Week(float objetivoHoras, Date initOfSummer, Date endOfSummer) {
+    public Week( Date initOfSummer, Date endOfSummer) {
         this.initOfSummer = initOfSummer;
         this.endOfSummer = endOfSummer;
+        float objetivoHoras = 0;
+        for (Day d : days)
+        {
+            objetivoHoras += d.horasDiarias;
+        }
 
         segundosObjetivo = Math.round(objetivoHoras * 3600);
     }

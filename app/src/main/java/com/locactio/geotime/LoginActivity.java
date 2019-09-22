@@ -35,8 +35,12 @@ public class LoginActivity extends Template {
         pref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE);
         correo = findViewById(R.id.email);
         pass = findViewById(R.id.password);
-        correo.setText(pref.getString(userTkn, ""));
-        pass.setText(pref.getString(pinTkn, ""));
+
+        String correoPref = pref.getString(userTkn, "");
+        String passPref = pref.getString(pinTkn,"");
+
+        correo.setText(correoPref);
+        pass.setText(passPref);
         coordinatorLayout = findViewById(R.id.coordinator);
 
         String version = "Ver " + BuildConfig.VERSION_NAME + "_" + BuildConfig.VERSION_CODE;

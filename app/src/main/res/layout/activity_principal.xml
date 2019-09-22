@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lemonade.widgets.slidesidemenu.SlideSideMenuTransitionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lemonade.widgets.slidesidemenu.SlideSideMenuTransitionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/slide_side_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <include layout="@layout/menu_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <com.lemonade.widgets.slidesidemenu.SlideSideMenuContentCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            layout="@layout/menu_list"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_content"/>
 
     </com.lemonade.widgets.slidesidemenu.SlideSideMenuContentCardView>
-    <include
-        layout="@layout/content_principal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
 </com.lemonade.widgets.slidesidemenu.SlideSideMenuTransitionLayout>
