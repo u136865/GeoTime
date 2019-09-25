@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -77,6 +78,7 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
      KProgressHUD hud;
      Date startOfSummer, endOfSummer;
      SwipeRefreshLayout swipeRefreshLayout;
+     Chronometer chronometer;
 
     public static ClockingFragment newInstance(String tkn, int hrs) {
         token = tkn;
@@ -94,6 +96,13 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
              c.setTime(yearAgo);
          c.add(Calendar.SECOND, 1);
          request_info(c.getTime(), new Date());
+         chronometer.start();
+     }
+
+     @Override
+     public void onPause() {
+         super.onPause();
+         chronometer.stop();
      }
 
      @Nullable
@@ -113,6 +122,7 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
         d2 = v.findViewById(R.id.detail2);
         d3 = v.findViewById(R.id.detail3);
         ft = v.findViewById(R.id.fechaTitulo);
+        chronometer = v.findViewById(R.id.chronometer);
 
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, 1);
@@ -291,6 +301,21 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
         });
 
 
+        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                if (diaSeleccionado != null && semanaSeleccionada != null) {
+                    if ((sameDay(new Date(),diaSeleccionado.getFecha()) && segmentedControl.getLastSelectedAbsolutePosition() == 0 ) ||
+                            (sameWeek(new Date(), semanaSeleccionada.getDays().get(0).getFecha()) && segmentedControl.getLastSelectedAbsolutePosition() == 1)){
+                        Log.d("RECALCULO", "REcalculo");
+                        diaSeleccionado.calculateTimes();
+                        semanaSeleccionada.calculateTimes();
+                        refreshScreenData(true);
+                    }
+                }
+            }
+        });
+
         return v;
     }
 
@@ -346,7 +371,9 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
                  Date valorando = new Date(0);
                  Day inProgress = null;
                  Week weekInProgress = null;
+
                  for (Clocking c : horasTotales) {
+
                      if (!sameDay(valorando, c.getMomento())) {
                          valorando = c.getMomento();
 
@@ -367,7 +394,7 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
                              weekInProgress.addDay(inProgress);
 
                          }
-                         inProgress = new Day(hours * 1.0f, startOfSummer, endOfSummer);
+                         inProgress = new Day(41.0f, startOfSummer, endOfSummer);
                      }
                      inProgress.addClocking(c);
 

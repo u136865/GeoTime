@@ -77,7 +77,6 @@ public class Day {
             horasDiarias = 7;
         }
 
-
         Date termina = null, comienza = null;
         switch (fichajes.get(0).getTipo())
         {
@@ -132,11 +131,11 @@ public class Day {
         if (trabajando)
         {
             Calendar c = Calendar.getInstance();
-            Log.d("Calendar antes: ", c.getTime().toString());
-            Log.d("Resto: ", fichajes.get(0).getMomento().toString());
+            //Log.d("Calendar antes: ", c.getTime().toString());
+            //Log.d("Resto: ", fichajes.get(0).getMomento().toString());
             c.add(SECOND, -((int) (fichajes.get(0).getMomento().getTime() / 1000)));
 
-            Log.d("Calendar despues:", c.getTime().toString());
+            //Log.d("Calendar despues:", c.getTime().toString());
             Date ahora = c.getTime();
             Date hF = fichajes.get(0).getMomento();
             Date nuevo = new Date(ahora.getTime() - hF.getTime());

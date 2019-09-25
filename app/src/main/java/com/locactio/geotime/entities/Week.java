@@ -28,13 +28,7 @@ public class Week {
     public Week( Date initOfSummer, Date endOfSummer) {
         this.initOfSummer = initOfSummer;
         this.endOfSummer = endOfSummer;
-        float objetivoHoras = 0;
-        for (Day d : days)
-        {
-            objetivoHoras += d.horasDiarias;
-        }
 
-        segundosObjetivo = Math.round(objetivoHoras * 3600);
     }
 
     public void addDay(Day day)
@@ -43,7 +37,7 @@ public class Week {
     }
 
     public void calculateTimes(){
-        Log.d("Calculate Times", "Calc");
+        //Log.d("Calculate Times", "Calc");
         segundosTrabajados = 0;
         if (days.get(0).getFichajes().get(0).getTipo() == 0 || days.get(0).getFichajes().get(0).getTipo() == 2)
             trabajando = true;
@@ -58,6 +52,14 @@ public class Week {
         if (hora.after(initOfSummer) && hora.before(endOfSummer))
         {
             segundosObjetivo = 35 * 3600;
+        }else{
+            float objetivoHoras = 0;
+            for (Day d : days)
+            {
+                objetivoHoras += d.horasDiarias;
+            }
+
+            segundosObjetivo = Math.round(objetivoHoras * 3600);
         }
 
     }

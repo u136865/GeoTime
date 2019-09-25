@@ -49,6 +49,7 @@
             android:orientation="horizontal"
             android:background="@color/naranjaLogo"
             android:layout_below="@+id/desdeLayout"
+            android:id="@+id/hastaLayout"
             android:layout_marginTop="20dp">
 
             <TextView
@@ -75,6 +76,157 @@
                 android:gravity="center"/>
 
         </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hastaLayout"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:id="@+id/rango"
+                    android:autoSizeTextType="uniform"
+                    android:textSize="20sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:text="10/09/2019 - 10/10/2019"
+                    android:textColor="@color/blanco"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/rango">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:layout_marginTop="10dp"
+                            android:id="@+id/dias_trabajados_title"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="@string/dias_trabajados"
+                            android:textColor="@color/blanco"
+                            android:layout_marginStart="15dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:id="@+id/horas_objetivo"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="@string/objetivo_horas"
+                            android:textColor="@color/blanco"
+                            android:layout_below="@+id/dias_trabajados_title"
+                            android:layout_marginStart="15dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:id="@+id/horas_trabajadas"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="@string/horas_trabajadas"
+                            android:textColor="@color/blanco"
+                            android:layout_below="@+id/horas_objetivo"
+                            android:layout_marginStart="15dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:id="@+id/diferencia_horas"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="@string/diferencia_horas"
+                            android:textColor="@color/blanco"
+                            android:layout_below="@+id/horas_trabajadas"
+                            android:layout_marginStart="15dp"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:id="@+id/dias_trabajados_value"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="5"
+                            android:textColor="@color/blanco"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="15dp"
+                            android:paddingBottom="15dp"
+                            android:gravity="center"
+                            android:id="@+id/horas_objetivo_text"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="57:00"
+                            android:textColor="@color/blanco"
+                            android:layout_below="@+id/dias_trabajados_value"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="15dp"
+                            android:paddingBottom="15dp"
+                            android:gravity="center"
+                            android:id="@+id/horas_trabajadas_text"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="58:35"
+                            android:textColor="@color/blanco"
+                            android:layout_below="@+id/horas_objetivo_text"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="15dp"
+                            android:paddingBottom="15dp"
+                            android:gravity="center"
+                            android:id="@+id/diferencia_horas_text"
+                            android:autoSizeTextType="uniform"
+                            android:textSize="18sp"
+                            android:autoSizeMaxTextSize="18sp"
+                            android:text="1:35"
+                            android:textColor="@color/blanco"
+                            android:layout_below="@+id/horas_trabajadas_text"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </ScrollView>
 
 
 

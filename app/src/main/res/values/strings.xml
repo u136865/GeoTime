@@ -32,4 +32,7 @@
     <string name="informe">Informe</string>
     <string name="hasta">Hasta:</string>
     <string name="desde">Desde:</string>
+    <string name="dias_trabajados">DÍAS TRABAJADOS</string>
+    <string name="objetivo_horas">OBJETIVO HORAS</string>
+    <string name="diferencia_horas">DIFERENCIA HORAS</string>
 </resources>
