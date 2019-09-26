@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 
 import com.lemonade.widgets.slidesidemenu.SlideSideMenuTransitionLayout;
@@ -20,6 +19,7 @@ public class PrincipalActivity extends Template {
     ClockingFragment cf;
     RangeFragment rf;
     SlideSideMenuTransitionLayout slide;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +57,7 @@ public class PrincipalActivity extends Template {
 
 
     public void rango(View view) {
-        if (rf == null)
-        {
+        if (rf == null) {
             rf = RangeFragment.newInstance();
         }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -73,6 +72,7 @@ public class PrincipalActivity extends Template {
     }
 
     private static final String pinTkn = "9V1%YaPO&dX&";
+
     public void cerrarSesion(View view) {
         SharedPreferences.Editor pref = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
         pref.remove(pinTkn).apply();
