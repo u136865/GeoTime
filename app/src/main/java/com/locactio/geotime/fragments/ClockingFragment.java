@@ -35,6 +35,7 @@ import com.locactio.geotime.entities.Clocking;
 import com.locactio.geotime.entities.Day;
 import com.locactio.geotime.entities.Week;
 import com.locactio.geotime.utils.TableViewAdapter;
+import com.locactio.geotime.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -80,8 +81,7 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
      SwipeRefreshLayout swipeRefreshLayout;
      Chronometer chronometer;
 
-    public static ClockingFragment newInstance(String tkn, int hrs) {
-        token = tkn;
+    public static ClockingFragment newInstance(int hrs) {
         hours = hrs;
         return new ClockingFragment();
     }
@@ -320,13 +320,20 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
     }
 
      private void request_info(Date d1, Date d2) {
+         if (token == null)
+             token = Utils.getToken(getActivity());
          hud.show();
          DataREST.execute(token, d1, d2, new ClockingResponseHandler() {
              @Override
              public void onError() {
-                 hud.dismiss();
-                 swipeRefreshLayout.setRefreshing(false);
-                 Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
+                 try {
+                     hud.dismiss();
+                     swipeRefreshLayout.setRefreshing(false);
+                     Snackbar.make(coordinatorLayout, getResources().getString(R.string.error_ocurred), Snackbar.LENGTH_LONG).show();
+                 }catch (Exception e)
+                 {
+                     e.printStackTrace();
+                 }
              }
 
              @Override

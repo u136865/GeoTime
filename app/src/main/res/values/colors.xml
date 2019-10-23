@@ -8,5 +8,6 @@
     <color name="naranjaFondo">#F18053</color>
     <color name="naranjaLogo">#FF6E02</color>
     <color name="blanco">#FFFFFF</color>
+    <color name="rojo">#FF0000</color>
     <color name="clearColor">#00000000</color>
 </resources>

@@ -21,7 +21,7 @@ android {
         applicationId "com.locactio.geotime"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 8
+        versionCode 10
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -35,7 +35,13 @@ android {
     }
 
     buildTypes {
+        debug{
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -60,14 +66,17 @@ dependencies {
     implementation 'com.github.RobertApikyan:SegmentedControl:1.2.0'
     implementation 'com.kaopiz:kprogresshud:1.2.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     implementation 'com.android.support:support-v4:28.0.0'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
 
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    compile project(':slidesidemenu-library')
+    implementation project(':slidesidemenu-library')
 }

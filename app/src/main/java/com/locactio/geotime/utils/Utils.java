@@ -1,6 +1,7 @@
 package com.locactio.geotime.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.locactio.geotime.R;
 import com.locactio.geotime.entities.Day;
@@ -56,5 +57,17 @@ public class Utils {
                 return context.getString(R.string.domingo);
         }
         return "";
+    }
+
+    private static final String preferences = "mS6KMD0Da3qe";
+    private static final String preferences_token = "7DASfHlG2Ju0";
+    public static void setToken(String token, Context context)
+    {
+        SharedPreferences shared = context.getSharedPreferences(preferences, Context.MODE_PRIVATE);
+        shared.edit().putString(token, preferences_token).apply();
+    }
+    public static String getToken(Context context)
+    {
+        return context.getSharedPreferences(preferences, Context.MODE_PRIVATE).getString(preferences_token, "");
     }
 }

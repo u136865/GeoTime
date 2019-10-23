@@ -1,24 +1,23 @@
 package com.locactio.geotime.entities;
 
-import android.util.Log;
-import android.widget.TextView;
-
-import com.locactio.geotime.PrincipalActivity;
 import com.locactio.geotime.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 
 import static java.util.Calendar.FRIDAY;
-import static java.util.Calendar.MILLISECOND;
 import static java.util.Calendar.SECOND;
 
 public class Day {
+    private final int INICIO = 0;
+    private final int SALIR = 1;
+    private final int PAUSA = 2;
+    private final int REANUDA = 3;
     Date fecha;
     ArrayList<Clocking> fichajes = new ArrayList<>();
+
+    double[] periodos;
     long segundosTrabajados = 0;
     Date horaSalida = new Date(0);
     long descanso = 0;
@@ -49,7 +48,7 @@ public class Day {
         fichajes.add(clocking);
     }
 
-    public void calculateTimes() {
+    public Boolean calculateTimes() {
         horaSalida = new Date(0);
         segundosTrabajados = 0;
         segundosRestantes = 0;
@@ -60,7 +59,7 @@ public class Day {
         if (fichajes.get(0).getTipo() == 6)
         {
             terminado = true;
-            return;
+            return true;
         }
 
         if (fecha.before(initOfSummer) || fecha.after(endOfSummer)) {
@@ -155,7 +154,33 @@ public class Day {
             long segundosDif = (long)(horasDiarias * 3600) - segundosTrabajados;
             horaSalida = new Date(fichajes.get(0).getMomento().getTime() + (segundosDif * 1000));
         }
+        if (fichajes.size() == 1)
+            return true;
 
+        try {
+            int cuantos = 0;
+            for (int i = 0; i < fichajes.size(); i++)
+                if (fichajes.get(i).getTipo() == SALIR || fichajes.get(i).getTipo() == PAUSA)
+                    cuantos++;
+
+            periodos = new double[cuantos];
+            cuantos = 0;
+            for (int i = 1; i < fichajes.size(); i++) {
+                if (fichajes.get(i).getTipo() == REANUDA || fichajes.get(i).getTipo() == INICIO) {
+                    Date inicioPeriodo = fichajes.get(i).getMomento();
+                    Date finPeriodo = fichajes.get(i - 1).getMomento();
+                    if (cuantos < periodos.length) {
+                        periodos[cuantos++] = (finPeriodo.getTime() / 1000) - (inicioPeriodo.getTime() / 1000);
+                    }else{
+                        return false;
+                    }
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public ArrayList<Clocking> getFichajes() {
@@ -200,6 +225,16 @@ public class Day {
 
     public float getHorasDiarias() {
         return horasDiarias;
+    }
+
+    public double[] getPeriodos() {
+        if (periodos == null)
+            periodos = new double[0];
+        return periodos;
+    }
+
+    public void setPeriodos(double[] periodos) {
+        this.periodos = periodos;
     }
 
     public String friday(ArrayList<Week> weeks) {

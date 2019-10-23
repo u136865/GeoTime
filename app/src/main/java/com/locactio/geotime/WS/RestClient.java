@@ -23,8 +23,14 @@ public class RestClient {
     private static final String TOKEN_HEADER = "token";
 
 
+    private static final String USER_ACTION = "user_action";
+    private static final String USER_TIMESTAMP = "user_timestamp";
+    private static final String USER_GPS = "user_gps_coordinates";
+
+
     private static final String LOGIN_METHOD = "login";
     private static final String CLOCKING_METHOD = "clockings";
+    private static final String POST_CLOCKING_METHOD = "clocking";
 
     public static void LOGIN(String user, String password, Callback callback) {
         Log.e("POST", BASE_URL + LOGIN_METHOD);
@@ -41,6 +47,29 @@ public class RestClient {
                 .url(BASE_URL + LOGIN_METHOD)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void CLOCK(String token, String action, String timestamp, String coordinate, Callback callback) {
+        Log.e("POST", BASE_URL + POST_CLOCKING_METHOD);
+        JSONObject json = new JSONObject();
+        try {
+            json.put(USER_ACTION, action);
+            json.put(USER_TIMESTAMP, timestamp);
+            json.put(USER_GPS, coordinate);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(JSON, json.toString());
+        OkHttpClient client = buildClient();
+        Request request = new Request.Builder()
+                .url(BASE_URL + POST_CLOCKING_METHOD)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Accept", "application/vnd.apiintratime.v1+json")
+                .addHeader("token", token)
                 .post(body)
                 .build();
 
