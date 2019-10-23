@@ -85,6 +85,8 @@ public class MainFragment extends Fragment{
         return new MainFragment();
     }
 
+
+    long momento = new Date().getTime();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -310,12 +312,15 @@ public class MainFragment extends Fragment{
 
     private void refreshScreenData(Boolean animated)
     {
-        Boolean permitStart = diaSeleccionado.calculateTimes();
+        Boolean permitStart;
+        if (diaSeleccionado == null)
+            diaSeleccionado = dias.get(0);
+        permitStart = diaSeleccionado.calculateTimes();
         entries = new ArrayList<>();
         double acumulados = 0;
         double segundosDiarios = diaSeleccionado.getHorasDiarias() * 3600.0f;
         int cantidadValores = diaSeleccionado.getPeriodos().length + 1;
-        int[] colores = new int[cantidadValores];
+        int[] colores = new int[2];
 
         if (!sameDay(new Date(), diaSeleccionado.getFecha()) && diaSeleccionado.isTerminado())
         {
@@ -349,17 +354,30 @@ public class MainFragment extends Fragment{
             return;
         }
 
-        for (int i = 0; i < diaSeleccionado.getPeriodos().length ; i++) {
-            double entryValue = (diaSeleccionado.getPeriodos()[i] / segundosDiarios) * 100.0f;
-            Log.d("PERIODO", "El periodo es de: " + (diaSeleccionado.getPeriodos()[i] / segundosDiarios) * 100 + "%");
-            PieEntry pE = new PieEntry((float) (entryValue),i);
+//        for (int i = 0; i < diaSeleccionado.getPeriodos().length ; i++) {
+//            double entryValue = (diaSeleccionado.getPeriodos()[i] / segundosDiarios) * 100.0f;
+//            Log.d("PERIODO", "El periodo es de: " + (diaSeleccionado.getPeriodos()[i] / segundosDiarios) * 100 + "%");
+//            PieEntry pE = new PieEntry((float) (entryValue),i);
+//            entries.add(pE);
+//            acumulados += entryValue;
+//            colores[i] = getResources().getColor(R.color.blanco);
+//        }
+//        if (acumulados <= 100) {
+//            entries.add(new PieEntry((float) (100 - acumulados), entries.size() - 1));
+//            colores[colores.length - 1] = getResources().getColor(R.color.naranjaFondo);
+        if (diaSeleccionado.getSegundosTrabajados() < segundosDiarios){
+            Calendar c = Calendar.getInstance();
+            double entryValue = ((diaSeleccionado.getSegundosTrabajados() / segundosDiarios) * 100.0f);
+            Log.e("VALUE", String.valueOf(entryValue));
+            PieEntry pE = new PieEntry((float)entryValue,0);
+            PieEntry pE2 = new PieEntry(100 - ((float)entryValue),0);
             entries.add(pE);
-            acumulados += entryValue;
-            colores[i] = getResources().getColor(R.color.blanco);
-        }
-        if (acumulados <= 100) {
-            entries.add(new PieEntry((float) (100 - acumulados), entries.size() - 1));
-            colores[colores.length - 1] = getResources().getColor(R.color.naranjaFondo);
+            entries.add(pE2);
+            colores = new int[] {getResources().getColor(R.color.blanco), getResources().getColor(R.color.naranjaFondo)};
+            if (pieDataSet != null) {
+                pieDataSet.getValues().clear();
+                pieDataSet.setValues(entries);
+            }
         }else{
             colores = new int[] {getResources().getColor(R.color.rojo), getResources().getColor(R.color.blanco)};
             entries.clear();
@@ -368,6 +386,10 @@ public class MainFragment extends Fragment{
             entries.add(pE);
             pE = new PieEntry((float)(100-diferencia),1);
             entries.add(pE);
+            if (pieDataSet != null) {
+                pieDataSet.getValues().clear();
+                pieDataSet.setValues(entries);
+            }
         }
         if (pieDataSet == null) {
             pieDataSet = new PieDataSet(entries, "");
@@ -384,9 +406,10 @@ public class MainFragment extends Fragment{
             grafico.setHoleColor(getActivity().getResources().getColor(R.color.clearColor));
             grafico.getDescription().setEnabled(false);
             grafico.getLegend().setEnabled(false);
+            grafico.setTouchEnabled(false);
         }
         grafico.notifyDataSetChanged();
-
+        grafico.invalidate();
         int horas = (int) (diaSeleccionado.getSegundosTrabajados() / 3600);
         long restante = diaSeleccionado.getSegundosTrabajados() - horas * 3600;
         int minutos = (int)(restante / 60);
