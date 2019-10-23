@@ -92,6 +92,7 @@ public class MainFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         grafico = v.findViewById(R.id.grafico);
+        grafico.setNoDataText("");
         coordinatorLayout = v.findViewById(R.id.coordinator);
         clock = v.findViewById(R.id.clockTime);
         chronometer = v.findViewById(R.id.chronometer);
@@ -354,21 +355,9 @@ public class MainFragment extends Fragment{
             return;
         }
 
-//        for (int i = 0; i < diaSeleccionado.getPeriodos().length ; i++) {
-//            double entryValue = (diaSeleccionado.getPeriodos()[i] / segundosDiarios) * 100.0f;
-//            Log.d("PERIODO", "El periodo es de: " + (diaSeleccionado.getPeriodos()[i] / segundosDiarios) * 100 + "%");
-//            PieEntry pE = new PieEntry((float) (entryValue),i);
-//            entries.add(pE);
-//            acumulados += entryValue;
-//            colores[i] = getResources().getColor(R.color.blanco);
-//        }
-//        if (acumulados <= 100) {
-//            entries.add(new PieEntry((float) (100 - acumulados), entries.size() - 1));
-//            colores[colores.length - 1] = getResources().getColor(R.color.naranjaFondo);
         if (diaSeleccionado.getSegundosTrabajados() < segundosDiarios){
             Calendar c = Calendar.getInstance();
             double entryValue = ((diaSeleccionado.getSegundosTrabajados() / segundosDiarios) * 100.0f);
-            Log.e("VALUE", String.valueOf(entryValue));
             PieEntry pE = new PieEntry((float)entryValue,0);
             PieEntry pE2 = new PieEntry(100 - ((float)entryValue),0);
             entries.add(pE);
@@ -381,7 +370,7 @@ public class MainFragment extends Fragment{
         }else{
             colores = new int[] {getResources().getColor(R.color.rojo), getResources().getColor(R.color.blanco)};
             entries.clear();
-            double diferencia = acumulados-100;
+            double diferencia = ((diaSeleccionado.getSegundosTrabajados() / segundosDiarios) * 100.0f)-100;
             PieEntry pE = new PieEntry((float)(diferencia),0);
             entries.add(pE);
             pE = new PieEntry((float)(100-diferencia),1);
