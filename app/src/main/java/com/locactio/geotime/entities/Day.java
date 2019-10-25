@@ -4,6 +4,8 @@ import com.locactio.geotime.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import static java.util.Calendar.FRIDAY;
@@ -32,10 +34,11 @@ public class Day {
 
     boolean isSummer = false;
 
-    Date horaSalidaReducido=null;
+    Date horaSalidaReducido = null;
 
-    public Day(float horasSemanales, Date initOfSummer, Date endOfSummer)
-    {
+    ArrayList<Period> periodosArray = new ArrayList<>();
+
+    public Day(float horasSemanales, Date initOfSummer, Date endOfSummer) {
 
         this.initOfSummer = initOfSummer;
         this.endOfSummer = endOfSummer;
@@ -43,8 +46,7 @@ public class Day {
         this.horasSemanales = horasSemanales;
     }
 
-    public void addClocking(Clocking clocking)
-    {
+    public void addClocking(Clocking clocking) {
         fichajes.add(clocking);
     }
 
@@ -53,11 +55,10 @@ public class Day {
         segundosTrabajados = 0;
         segundosRestantes = 0;
         descanso = 0;
-
+        periodosArray.clear();
         fecha = fichajes.get(0).getMomento();
 
-        if (fichajes.get(0).getTipo() == 6)
-        {
+        if (fichajes.get(0).getTipo() == 6) {
             terminado = true;
             return true;
         }
@@ -70,15 +71,14 @@ public class Day {
             } else {
                 horasDiarias = horasSemanales / 5;
             }
-        }else{
+        } else {
             isSummer = true;
             horasSemanales = 35;
             horasDiarias = 7;
         }
 
         Date termina = null, comienza = null;
-        switch (fichajes.get(0).getTipo())
-        {
+        switch (fichajes.get(0).getTipo()) {
             case 0:
             case 3:
                 trabajando = true;
@@ -93,14 +93,11 @@ public class Day {
 
         Boolean activo = false;
 
-        for (int i = 0; i < fichajes.size(); i++)
-        {
-            if (fichajes.get(i).getTipo() == 1 || fichajes.get(i).getTipo() == 2)
-            {
+        for (int i = 0; i < fichajes.size(); i++) {
+            if (fichajes.get(i).getTipo() == 1 || fichajes.get(i).getTipo() == 2) {
                 activo = true;
                 termina = fichajes.get(i).getMomento();
-            }else if (fichajes.get(i).getTipo() == 0 || fichajes.get(i).getTipo() == 3)
-            {
+            } else if (fichajes.get(i).getTipo() == 0 || fichajes.get(i).getTipo() == 3) {
                 activo = false;
                 comienza = fichajes.get(i).getMomento();
             }
@@ -112,23 +109,32 @@ public class Day {
                     descanso += (comienza.getTime() - termina.getTime()) / 1000;
                 }
             }
-        }
 
-        if (enDescanso)
-        {
+            try {
+                if (i != 0) {
+                    periodosArray.add(new Period((fichajes.get(i-1).getMomento().getTime() - fichajes.get(i).getMomento().getTime()) / 1000, activo ? Period.DESCANSO : Period.TRABAJANDO));
+                } else {
+                    periodosArray.add(new Period((new Date().getTime() - fichajes.get(i).getMomento().getTime()) / 1000, activo ? Period.DESCANSO : Period.TRABAJANDO));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        Collections.reverse(periodosArray);
+        if (enDescanso) {
             int sR = Math.round(horasDiarias * 3600);
             segundosRestantes = sR - segundosTrabajados;
             //Calendar cD = Calendar.getInstance();
             Date ahora = new Date();
             Date hF = fichajes.get(0).getMomento();
-            long difDate = (ahora.getTime() - hF.getTime())/1000;
+            long difDate = (ahora.getTime() - hF.getTime()) / 1000;
             //cD.add(SECOND,1);
             descanso += difDate;
             horaSalida = new Date((segundosRestantes * 1000) - 3600000);
         }
 
-        if (trabajando)
-        {
+        if (trabajando) {
             Calendar c = Calendar.getInstance();
             //Log.d("Calendar antes: ", c.getTime().toString());
             //Log.d("Resto: ", fichajes.get(0).getMomento().toString());
@@ -138,7 +144,7 @@ public class Day {
             Date ahora = c.getTime();
             Date hF = fichajes.get(0).getMomento();
             Date nuevo = new Date(ahora.getTime() - hF.getTime());
-            long difDate = c.getTime().getTime()/1000;
+            long difDate = c.getTime().getTime() / 1000;
 //            long difDate = (ahora.getTime() - hF.getTime())/1000;
             segundosTrabajados += difDate;
             segundosRestantes = Math.round(horasDiarias * 3600) - segundosTrabajados;
@@ -149,9 +155,8 @@ public class Day {
             horaSalida = chs.getTime();
         }
 
-        if (terminado)
-        {
-            long segundosDif = (long)(horasDiarias * 3600) - segundosTrabajados;
+        if (terminado) {
+            long segundosDif = (long) (horasDiarias * 3600) - segundosTrabajados;
             horaSalida = new Date(fichajes.get(0).getMomento().getTime() + (segundosDif * 1000));
         }
         if (fichajes.size() == 1)
@@ -171,13 +176,12 @@ public class Day {
                     Date finPeriodo = fichajes.get(i - 1).getMomento();
                     if (cuantos < periodos.length) {
                         periodos[cuantos++] = (finPeriodo.getTime() / 1000) - (inicioPeriodo.getTime() / 1000);
-                    }else{
+                    } else {
                         return false;
                     }
                 }
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
@@ -237,37 +241,38 @@ public class Day {
         this.periodos = periodos;
     }
 
+    public ArrayList<Period> getPeriodosArray()
+    {
+        return periodosArray;
+    }
+
     public String friday(ArrayList<Week> weeks) {
         Calendar c = Calendar.getInstance();
         c.setTime(fecha);
         Week semana = null;
 
-        if (c.get(Calendar.DAY_OF_WEEK) != FRIDAY)
-        {
+        if (c.get(Calendar.DAY_OF_WEEK) != FRIDAY) {
             return "";
         }
 
-         for (Week w : weeks)
-         {
-             if (Utils.sameWeek(w.days.get(0).getFecha(), fecha))
-             {
-                 semana = w;
-                 break;
-             }
-         }
+        for (Week w : weeks) {
+            if (Utils.sameWeek(w.days.get(0).getFecha(), fecha)) {
+                semana = w;
+                break;
+            }
+        }
 
-         if (semana == null)
-             return "";
+        if (semana == null)
+            return "";
 
-        if (trabajando)
-        {
+        if (trabajando) {
             calculateTimes();
             semana.calculateTimes();
             long tiempoRestante = semana.getSegundosObjetivo() - semana.getSegundosTrabajados();
             c = Calendar.getInstance();
             c.add(SECOND, (int) tiempoRestante);
 
-            return String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":"+String.format("%02d", c.get(Calendar.MINUTE)) + ":"+String.format("%02d", c.get(SECOND)) + "*";
+            return String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", c.get(Calendar.MINUTE)) + ":" + String.format("%02d", c.get(SECOND)) + "*";
         }
         return "";
     }

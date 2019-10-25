@@ -42,6 +42,7 @@ import com.locactio.geotime.WS.LoginResponseHandler;
 import com.locactio.geotime.bbdd.facades.ClockingLab;
 import com.locactio.geotime.entities.Clocking;
 import com.locactio.geotime.entities.Day;
+import com.locactio.geotime.entities.Period;
 import com.locactio.geotime.entities.Week;
 import com.locactio.geotime.utils.Utils;
 
@@ -355,37 +356,57 @@ public class MainFragment extends Fragment{
             return;
         }
 
+        long segundosVividos = diaSeleccionado.getSegundosTrabajados() + diaSeleccionado.getDescanso();
+        long segundosTotales = (long)(diaSeleccionado.getHorasDiarias() * 3600) + diaSeleccionado.getDescanso();
+        ArrayList<Integer> coloresIntegers = new ArrayList<>();
+        int indice = 0;
+
+        entries.clear();
+
         if (diaSeleccionado.getSegundosTrabajados() < segundosDiarios){
-            Calendar c = Calendar.getInstance();
-            double entryValue = ((diaSeleccionado.getSegundosTrabajados() / segundosDiarios) * 100.0f);
-            PieEntry pE = new PieEntry((float)entryValue,0);
-            PieEntry pE2 = new PieEntry(100 - ((float)entryValue),0);
-            entries.add(pE);
-            entries.add(pE2);
-            colores = new int[] {getResources().getColor(R.color.blanco), getResources().getColor(R.color.naranjaFondo)};
-            if (pieDataSet != null) {
-                pieDataSet.getValues().clear();
-                pieDataSet.setValues(entries);
+
+            for (Period p : diaSeleccionado.getPeriodosArray())
+            {
+                coloresIntegers.add(getResources().getColor(p.getTipo() == Period.TRABAJANDO ? R.color.blanco: R.color.naranjaFondo));
+                entries.add(new PieEntry(p.getSegundos(), indice++));
             }
+
+            coloresIntegers.add(getResources().getColor(R.color.naranjaFondo));
+            entries.add(new PieEntry(segundosTotales - segundosVividos,indice));
+
         }else{
-            colores = new int[] {getResources().getColor(R.color.rojo), getResources().getColor(R.color.blanco)};
-            entries.clear();
-            double diferencia = ((diaSeleccionado.getSegundosTrabajados() / segundosDiarios) * 100.0f)-100;
-            PieEntry pE = new PieEntry((float)(diferencia),0);
-            entries.add(pE);
-            pE = new PieEntry((float)(100-diferencia),1);
-            entries.add(pE);
-            if (pieDataSet != null) {
-                pieDataSet.getValues().clear();
-                pieDataSet.setValues(entries);
+
+            long segundosSobrantes = diaSeleccionado.getSegundosTrabajados() - (long)segundosDiarios;
+            entries.add(new PieEntry(segundosSobrantes, 0));
+            indice = 1;
+            coloresIntegers.add(getResources().getColor(R.color.rojo));
+            while (segundosSobrantes > 0)
+            {
+                if (diaSeleccionado.getPeriodosArray().get(0).getSegundos() <= segundosSobrantes)
+                {
+                    segundosSobrantes -= diaSeleccionado.getPeriodosArray().get(0).getSegundos();
+                    diaSeleccionado.getPeriodosArray().remove(0);
+                }else{
+                    diaSeleccionado.getPeriodosArray().get(0).setSegundos(diaSeleccionado.getPeriodosArray().get(0).getSegundos() - segundosSobrantes);
+                    segundosSobrantes = 0;
+                }
+            }
+            for (Period p : diaSeleccionado.getPeriodosArray())
+            {
+                coloresIntegers.add(getResources().getColor(p.getTipo() == Period.TRABAJANDO ? R.color.blanco: R.color.naranjaFondo));
+                entries.add(new PieEntry(p.getSegundos(), indice++));
             }
         }
-        if (pieDataSet == null) {
+
+        if (pieDataSet != null) {
+            pieDataSet.getValues().clear();
+            pieDataSet.setValues(entries);
+            pieDataSet.setColors(coloresIntegers);
+        }
+        else {
             pieDataSet = new PieDataSet(entries, "");
-
             pieData = new PieData(pieDataSet);
-            pieDataSet.setColors(colores);
-
+            pieDataSet.setColors(coloresIntegers);
             pieData.setDrawValues(false);
             grafico.setData(pieData);
             if (animated)
