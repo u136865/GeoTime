@@ -40,4 +40,5 @@
     <string name="salir">Salir</string>
     <string name="regreso">Regresar</string>
     <string name="comenzar">Entrar</string>
+    <string name="esta_seguro">¿Está seguro?</string>
 </resources>

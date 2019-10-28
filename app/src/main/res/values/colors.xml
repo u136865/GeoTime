@@ -10,4 +10,5 @@
     <color name="blanco">#FFFFFF</color>
     <color name="rojo">#FF0000</color>
     <color name="clearColor">#00000000</color>
+    <color name="negro">#000000</color>
 </resources>

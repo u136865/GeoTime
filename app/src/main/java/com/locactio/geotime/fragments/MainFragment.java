@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.print.PrinterId;
 import android.support.annotation.NonNull;
@@ -44,6 +45,7 @@ import com.locactio.geotime.entities.Clocking;
 import com.locactio.geotime.entities.Day;
 import com.locactio.geotime.entities.Period;
 import com.locactio.geotime.entities.Week;
+import com.locactio.geotime.utils.CustomConfirmDialog;
 import com.locactio.geotime.utils.Utils;
 
 import org.w3c.dom.Text;
@@ -149,15 +151,24 @@ public class MainFragment extends Fragment{
             TextView txt1, txt2;
             txt1 = view.findViewById(R.id.text1);
 
+            CustomConfirmDialog ccd = null;
             if (txt1.getText().toString().equalsIgnoreCase(getResources().getString(R.string.comenzar)))
             {
-                callClock(ClockingRest.ENTRAR);
+                ccd = new CustomConfirmDialog(MainFragment.this, ClockingRest.ENTRAR);
+//                callClock(ClockingRest.ENTRAR);
             }else if(txt1.getText().toString().equalsIgnoreCase(getResources().getString(R.string.regreso)))
             {
-                callClock(ClockingRest.VOLVER);
+                ccd = new CustomConfirmDialog(MainFragment.this, ClockingRest.VOLVER);
+//                callClock(ClockingRest.VOLVER);
             }else if(txt1.getText().toString().equalsIgnoreCase(getResources().getString(R.string.descanso)))
             {
-                callClock(ClockingRest.PAUSA);
+                ccd = new CustomConfirmDialog(MainFragment.this, ClockingRest.PAUSA);
+//                callClock(ClockingRest.PAUSA);
+            }
+            if (ccd != null)
+            {
+                ccd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                ccd.show();
             }
         }
     };
@@ -165,11 +176,14 @@ public class MainFragment extends Fragment{
     View.OnClickListener clickListener2 = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            callClock(ClockingRest.SALIR);
+//            callClock(ClockingRest.SALIR);
+            CustomConfirmDialog ccd = new CustomConfirmDialog(MainFragment.this, ClockingRest.SALIR);
+            ccd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            ccd.show();
         }
     };
 
-    private void callClock(String action)
+    public void callClock(String action)
     {
         ClockingRest.execute(token, action, (PrincipalActivity)getActivity(), new FichajeResponseHandler() {
             @Override
