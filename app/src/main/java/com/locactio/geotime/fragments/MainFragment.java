@@ -234,7 +234,7 @@ public class MainFragment extends Fragment{
         estadoAnterior = -1;
         pieDataSet = null;
     }
-    private void request_info(Date d1, Date d2) {
+    private synchronized void request_info(Date d1, Date d2) {
         if (token == null)
             token = Utils.getToken(getActivity());
         hud.show();

@@ -271,6 +271,15 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
             @Override
             public void onRefresh() {
                 Calendar c = Calendar.getInstance();
+                if (dias.size() == 0)
+                {
+                    if (horasTotales.size() > 0)
+                        c.setTime(horasTotales.get(0).getMomento());
+                    else
+                        c.setTime(yearAgo);
+                    c.add(Calendar.SECOND, 1);
+                    request_info(c.getTime(), new Date());
+                }
                 c.setTime(dias.get(0).getFecha());
                 c.add(Calendar.SECOND, 1);
                 request_info(c.getTime(), new Date());
