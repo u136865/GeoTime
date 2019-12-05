@@ -24,7 +24,7 @@ public class DataREST {
     private static final String tipo = "INOUT_TYPE";
     private static final String momento = "INOUT_DATE";
 
-    public static void execute(String token, Date from, Date to, final ClockingResponseHandler handler)
+    public static synchronized void execute(String token, Date from, Date to, final ClockingResponseHandler handler)
     {
 
         Calendar start = Calendar.getInstance();

@@ -76,7 +76,7 @@ public class RestClient {
         client.newCall(request).enqueue(callback);
     }
 
-    public static void USER_CLOCKINGS(String token, String from, String to, Callback callback)
+    public static synchronized void USER_CLOCKINGS(String token, String from, String to, Callback callback)
     {
         Log.e("GET", BASE_URL + CLOCKING_METHOD);
         String params = "?from=" + from + "&to=" + to;

@@ -275,7 +275,7 @@ public class MainFragment extends Fragment{
             }
 
             @Override
-            public void onResponse(List<Clocking> clockingList) {
+            public synchronized void onResponse(List<Clocking> clockingList) {
                 horasTotales.addAll(0, clockingList);
                 dias.clear();
 
