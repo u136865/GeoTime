@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.locactio.geotime.utils.Utils.sameDay;
 import static com.locactio.geotime.utils.Utils.sameWeek;
@@ -62,7 +63,7 @@ import static com.locactio.geotime.utils.Utils.sameWeek;
 public class MainFragment extends Fragment{
 
     KProgressHUD hud;
-    ArrayList<Day> dias = new ArrayList<>();
+    CopyOnWriteArrayList<Day> dias = new CopyOnWriteArrayList<>();
     String token = null;
     PieChart grafico;
     ArrayList<Clocking> horasTotales;
