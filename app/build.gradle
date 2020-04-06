@@ -21,7 +21,7 @@ android {
         applicationId "com.locactio.geotime"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 13
+        versionCode 15
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions {

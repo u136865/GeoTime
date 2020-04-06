@@ -3,9 +3,11 @@ package com.locactio.geotime;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.locactio.geotime.WS.LoginREST;
 import com.locactio.geotime.WS.LoginResponseHandler;
 import com.locactio.geotime.bbdd.facades.ClockingLab;
+import com.locactio.geotime.utils.Utils;
 
 import static android.support.design.widget.Snackbar.LENGTH_LONG;
 
@@ -47,8 +50,8 @@ public class LoginActivity extends Template {
         ((TextView) findViewById(R.id.version)).setText(version);
 
 
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
-
 
     public void conectar(View view) {
 
@@ -86,6 +89,7 @@ public class LoginActivity extends Template {
                 editor.putString(pinTkn, pass.getText().toString());
                 editor.commit();
 
+                Utils.setToken(token, LoginActivity.this);
                 pulsado = false;
                 Intent i = new Intent(LoginActivity.this, PrincipalActivity.class);
                 i.putExtra("token", token);

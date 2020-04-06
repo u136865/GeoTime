@@ -1,6 +1,7 @@
 package com.locactio.geotime;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
